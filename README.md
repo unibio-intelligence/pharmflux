@@ -1,52 +1,120 @@
 # PharmFlux
 
-**An open-source engine for building and simulating pharmacology models.**
+PharmFlux is an open-source Rust library for pharmacology models. It compiles
+unit-aware model definitions, simulates dosing regimens, and fits supported
+individual, pooled, and population models. The same engine is available to
+Rust, command-line, Python, and browser applications.
 
-PharmFlux helps researchers describe how drugs move through the body and how
-biological systems respond. It is being developed for pharmacokinetic (PK),
-pharmacodynamic (PD), and mechanistic modeling, from compartment models to
-physiologically based pharmacokinetic (PBPK) and quantitative systems
-pharmacology (QSP) models.
+This is an early **0.1.0 source release**. The instructions below build it
+from this repository.
 
-## What it does
+## Documentation
 
-Write a model as equations with explicit units, define a dosing regimen, and
-simulate how concentrations and other model outputs change over time.
-Use it to explore dose schedules, compare parameter choices, and build
-reproducible simulation workflows.
+- [Installation and first run](docs/installation.md): Rust, Python, and
+  WebAssembly builds.
+- [Models and simulation](docs/modeling.md): model format, units, dosing,
+  solver selection, and result shape.
+- [Fitting](docs/fitting.md): supported fit contracts, example requests, and
+  result interpretation.
+- [Browser integration and privacy](docs/browser.md): Web Worker setup and
+  what local execution does and does not guarantee.
 
-- **Readable models:** describe parameters, states, equations, and outputs in
-  a text format, with structured JSON for programmatic use.
-- **A shared Rust engine:** bring the same model into command-line, Python,
-  and browser workflows through native and WebAssembly bindings.
-- **Explicit scientific inputs and outputs:** keep units, dosing events,
-  solver settings, and execution provenance alongside the simulation.
+## What is included
 
-The goal is to make pharmacology models easier to inspect, reuse, and integrate
-into research software.
+- **Modeling and simulation:** text or JSON models, explicit units, boluses,
+  infusions, resets, covariates, observations on either side of an event,
+  analytic linear PK paths, and numerical ODE solvers. Available solver choices
+  include BDF, Tsit45, ESDIRK34, TR-BDF2, Rosenbrock23, and Rodas5P. Solver
+  capabilities differ; unsupported combinations return an error.
+- **Fitting:** individual and pooled Gaussian fits, a bounded single-parameter
+  fit, and scoped FOCEI, Laplace, and SAEM population fits. Population methods
+  support specific random-effect and residual-error forms; see the request
+  types and tests before using a new model shape. A converged fit still needs
+  scientific assessment of the data and parameter identifiability.
+- **Analysis:** forward sensitivities where supported, bounded parameter scans,
+  and Morris screening.
+- **Reproducibility:** versioned requests and results, input validation,
+  execution identity, explicit solver settings, and structured errors.
 
-## Local execution and privacy
+## Try it from the source checkout
 
-PharmFlux can run simulations on your own machine or directly in a browser
-through WebAssembly (WASM). Browser applications can compute results locally
-without uploading model inputs to a simulation server, and use Web Workers to
-keep the interface responsive while a simulation runs.
+Install Rust and Cargo. From the repository root, run the
+included synthetic examples:
 
-This makes it possible to build interactive modeling tools that keep models
-and data on the user's device. Any application embedding PharmFlux controls
-its own data collection, storage, and network behavior.
+```sh
+cargo run --release --locked -p pharmflux-cli -- run \
+  conformance/models/synthetic-pbpk-24.pfx \
+  conformance/requests/synthetic-pbpk-24.json > simulation.json
 
-## Contribute
+cargo run --release --locked -p pharmflux-cli -- fit \
+  conformance/models/synthetic-one-compartment.json \
+  conformance/requests/synthetic-fit.json > fit.json
+```
 
-Try PharmFlux with your own models and tell us what works and what could be
-better. Open an issue with a modeling use case, a question, or a feature
-suggestion. Contributions of model examples, correctness tests, documentation,
-bug fixes, and integrations are welcome. For larger changes, start with an
-issue so we can discuss the approach.
+The fit example estimates clearance and volume. Its status and estimates are
+under `fit` in `fit.json`. The examples use illustrative parameters and make no
+clinical prediction. [Synthetic fixture terms](conformance/FIXTURE-LICENSE.md)
+apply to the included model and request files.
 
-## License
+For Python 3.10 or newer, install from this checkout with
+`python -m pip install .`. The package uses the same native Rust engine:
 
-PharmFlux is licensed under the
-[Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).
+```python
+import json
+from pathlib import Path
+import pharmflux
+
+model = Path("conformance/models/synthetic-one-compartment.json").read_text()
+request = json.loads(Path("conformance/requests/synthetic-fit.json").read_text())
+result = pharmflux.CompiledSensitivities(model, ["cl", "v"]).fit(request)
+print(result["fit"]["status"], result["fit"]["parameters"])
+```
+
+Python also exposes `CompiledModel.run()` and `CompiledModel.fit_scalar()`.
+`population_fit_dataset()` converts an explicitly mapped tabular record subset
+into a population fit request while retaining source-row mappings. The
+command-line `fit` operation accepts the same versioned fit request used by
+the Rust and Python sensitivity APIs.
+
+## Repository structure
+
+| Path | Purpose |
+| --- | --- |
+| `crates/pharmflux-core/` | Model, regimen, unit, run, fit, and result types. |
+| `crates/pharmflux/` | Model parser, compiler, simulation runtime, sensitivities, and fit algorithms. |
+| `bindings/cli/` | `pharmflux` command-line interface. |
+| `bindings/python/` | Native Python package and tabular population-fit helper. |
+| `bindings/wasm/` | WebAssembly and JavaScript bindings for local browser execution. Generated WASM files are not committed. |
+| `bindings/r/src/rust/` | Low-level R bridge source. A complete installable R package is not part of this release. |
+| `conformance/` | Synthetic models, requests, and scientific regression cases. |
+| `vendor/diffsol/` | Pinned solver source used by the Rust runtime. See [provenance](vendor/DIFFSOL-PROVENANCE.md). |
+
+The WebAssembly source includes simulation, analysis, and fitting bindings.
+The supplied browser worker currently exposes simulation; see the
+[browser guide](docs/browser.md) for its contract and build steps. Model text,
+requests, and results can remain on the user's device when an application uses
+that worker without uploading them. The application controls its own network
+requests, telemetry, and persistence, so it must preserve that boundary.
+Diffsol's README and crate histories under `vendor/` describe that upstream
+solver project; the PharmFlux interfaces are listed above.
+
+## Checks and contributions
+
+Run `cargo fmt --all -- --check`, `cargo test --workspace --locked`, and
+`node --test bindings/wasm/js/client.test.mjs` from the repository root. The
+public workflow runs these checks. See [CONTRIBUTING.md](CONTRIBUTING.md) for
+scientific test expectations, issue reports, and contribution steps.
+
+## License and attribution
+
+PharmFlux code is available under the [MIT](LICENSE-MIT) or
+[Apache 2.0](LICENSE-APACHE) license, at your choice. The synthetic model and
+request files have [separate terms](conformance/FIXTURE-LICENSE.md). Vendored
+Diffsol is MIT-licensed; its source, citation, and local changes are described
+in the [provenance record](vendor/DIFFSOL-PROVENANCE.md).
 
 Developed by [UniBio Intelligence](https://unibiointelligence.com).
+
+## Acknowledgment
+
+PharmFlux development received support from Anthropic's rare disease grant.

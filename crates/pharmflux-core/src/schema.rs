@@ -1,0 +1,87 @@
+//! Structural JSON schemas; unit, domain, naming and capability checks remain in the compiler.
+use serde_json::Value;
+pub fn documents() -> Vec<(&'static str, Value)> {
+    let mut documents = vec![
+        (
+            "model.schema.json",
+            serde_json::to_value(schemars::schema_for!(crate::model::ModelDocument)).unwrap(),
+        ),
+        (
+            "run.schema.json",
+            serde_json::to_value(schemars::schema_for!(crate::run::RunRequest)).unwrap(),
+        ),
+        (
+            "result.schema.json",
+            serde_json::to_value(schemars::schema_for!(crate::run::RunResult)).unwrap(),
+        ),
+        (
+            "expression.schema.json",
+            serde_json::to_value(schemars::schema_for!(crate::expression::Expr)).unwrap(),
+        ),
+        (
+            "regimen.schema.json",
+            serde_json::to_value(schemars::schema_for!(crate::regimen::Request)).unwrap(),
+        ),
+        (
+            "steady-state-request.schema.json",
+            serde_json::to_value(schemars::schema_for!(crate::run::SteadyStateRequest)).unwrap(),
+        ),
+        (
+            "steady-state-result.schema.json",
+            serde_json::to_value(schemars::schema_for!(crate::run::SteadyStateResult)).unwrap(),
+        ),
+        (
+            "cycle-iteration-request.schema.json",
+            serde_json::to_value(schemars::schema_for!(crate::run::CycleIterationRequest)).unwrap(),
+        ),
+        (
+            "cycle-iteration-result.schema.json",
+            serde_json::to_value(schemars::schema_for!(crate::run::CycleIterationResult)).unwrap(),
+        ),
+    ];
+    documents.push((
+        "sensitivity-request.schema.json",
+        serde_json::to_value(schemars::schema_for!(crate::run::SensitivityRequest)).unwrap(),
+    ));
+    documents.push((
+        "sensitivity-result.schema.json",
+        serde_json::to_value(schemars::schema_for!(crate::run::SensitivityResult)).unwrap(),
+    ));
+    documents.push((
+        "fit-request.schema.json",
+        serde_json::to_value(schemars::schema_for!(crate::fit::FitRequest)).unwrap(),
+    ));
+    documents.push((
+        "fit-result.schema.json",
+        serde_json::to_value(schemars::schema_for!(crate::fit::FitResult)).unwrap(),
+    ));
+    documents.push((
+        "scalar-fit-request.schema.json",
+        serde_json::to_value(schemars::schema_for!(crate::fit::ScalarGaussianFitRequest)).unwrap(),
+    ));
+    documents.push((
+        "scalar-fit-result.schema.json",
+        serde_json::to_value(schemars::schema_for!(crate::fit::ScalarGaussianFitResult)).unwrap(),
+    ));
+    documents.push((
+        "scan-request.schema.json",
+        serde_json::to_value(schemars::schema_for!(crate::scan::ScanRequest)).unwrap(),
+    ));
+    documents.push((
+        "scan-result.schema.json",
+        serde_json::to_value(schemars::schema_for!(crate::scan::ScanResult)).unwrap(),
+    ));
+    documents.push((
+        "morris-request.schema.json",
+        serde_json::to_value(schemars::schema_for!(crate::morris::MorrisExecutionRequest)).unwrap(),
+    ));
+    documents.push((
+        "morris-result.schema.json",
+        serde_json::to_value(schemars::schema_for!(crate::morris::MorrisExecutionResult)).unwrap(),
+    ));
+    for (_, schema) in &mut documents {
+        schema["x-pharmflux-spec-version"] = Value::String(crate::identity::SPEC_VERSION.into());
+        schema["x-pharmflux-validation"]=Value::String("Structural schema only; compile, bind and validate execution capabilities before running.".into());
+    }
+    documents
+}

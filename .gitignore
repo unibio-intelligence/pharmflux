@@ -1,0 +1,15 @@
+/target/
+/simulation.json
+/fit.json
+/bindings/wasm/pkg/
+/node_modules/
+/.public-release/
+__pycache__/
+*.pyc
+.env
+.env.*
+!.env.example
+
+/bindings/r/src/*.o
+/bindings/r/src/*.so
+/bindings/r/src/*.dll

@@ -1,0 +1,13 @@
+title = "PharmFlux public source scan"
+
+[extend]
+useDefault = true
+
+# These three UTF-8 pharmacology models use .pfx as their text-model suffix.
+# The default PKCS#12 filename rule mistakes that suffix for a key container.
+[[rules]]
+id = "pkcs12-file"
+
+[[rules.allowlists]]
+description = "Reviewed synthetic PharmFlux text models"
+paths = ['''(^|/)conformance/models/synthetic-(invariant-loss|one-compartment|pbpk-24)\.pfx$''']
