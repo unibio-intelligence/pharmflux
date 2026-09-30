@@ -1,0 +1,21 @@
+[workspace]
+members = ["crates/pharmflux-core", "crates/pharmflux", "bindings/wasm", "bindings/cli", "bindings/python", "bindings/r/src/rust"]
+exclude = ["vendor/diffsol"]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+publish = false
+
+[workspace.dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1", features = ["float_roundtrip"] }
+pharmflux-core = { path = "crates/pharmflux-core" }
+pharmflux = { path = "crates/pharmflux" }
+diffsol = { path = "vendor/diffsol/crates/diffsol", version = "=0.17.1", default-features = false, features = ["nalgebra"] }
+
+[profile.release]
+lto = "thin"
+codegen-units = 1
