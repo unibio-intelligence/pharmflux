@@ -1,0 +1,27 @@
+[package]
+name = "pharmflux-wasm"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+wasm-bindgen = "0.2"
+pharmflux.workspace = true
+pharmflux-core.workspace = true
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[features]
+m0-conformance = []
+
+[dependencies.serde]
+workspace = true
+
+[dependencies.serde_json]
+workspace = true
+
+[dev-dependencies]
+serde.workspace = true
+serde_json.workspace = true

@@ -25,6 +25,34 @@ reproducible simulation workflows.
 The goal is to make pharmacology models easier to inspect, reuse, and integrate
 into research software.
 
+## Try it locally
+
+With Rust installed, clone this repository and run the included synthetic
+examples:
+
+```sh
+cargo run --release --locked -p pharmflux-cli -- run \
+  conformance/models/synthetic-pbpk-24.pfx \
+  conformance/requests/synthetic-pbpk-24.json > simulation.json
+
+cargo run --release --locked -p pharmflux-cli -- fit \
+  conformance/models/synthetic-one-compartment.json \
+  conformance/requests/synthetic-fit.json > fit.json
+```
+
+The simulation result contains time points, observation sides, named outputs,
+and execution identity. The fitting result reports a status and fitted
+parameters. These examples use synthetic inputs; estimation methods have
+explicitly supported model, error, and random-effect scopes.
+
+The Python package can be built with `maturin` from the repository root.
+`CompiledModel.fit_scalar` fits one bounded parameter from independent,
+additive-Gaussian observations using native simulations when compiling
+sensitivity equations is impractical. It reports convergence and the number
+of simulation evaluations.
+See `pyproject.toml` for its locked build configuration. Run
+`cargo test --workspace --locked` to check the Rust workspace.
+
 ## Local execution and privacy
 
 PharmFlux can run simulations on your own machine or directly in a browser
@@ -36,6 +64,18 @@ This makes it possible to build interactive modeling tools that keep models
 and data on the user's device. Any application embedding PharmFlux controls
 its own data collection, storage, and network behavior.
 
+## Current scope
+
+This is an early source release. The simulation engine covers unit-aware
+models, dosing and events, analytic linear PK, and explicit and stiff ODE
+solvers. Individual and pooled Gaussian fitting, plus bounded forms of FOCEI,
+Laplace, and SAEM, are available through the Rust API. These population
+methods have limited supported model and random-effect shapes; check the
+returned diagnostics and validate results for each scientific use case.
+
+The ODE solver source is vendored from [Diffsol](vendor/DIFFSOL-PROVENANCE.md)
+under the MIT license, with PharmFlux Rosenbrock extensions.
+
 ## Contribute
 
 Try PharmFlux with your own models and tell us what works and what could be
@@ -46,7 +86,8 @@ issue so we can discuss the approach.
 
 ## License
 
-PharmFlux is licensed under the
-[Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).
+PharmFlux is licensed under either the
+[MIT License](LICENSE-MIT) or the
+[Apache License 2.0](LICENSE-APACHE), at your choice.
 
 Developed by [UniBio Intelligence](https://unibiointelligence.com).

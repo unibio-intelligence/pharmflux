@@ -1,0 +1,15 @@
+[package]
+name = "pharmflux-cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[[bin]]
+name = "pharmflux"
+path = "src/main.rs"
+
+[dependencies]
+pharmflux.workspace = true
+pharmflux-core.workspace = true
+serde_json.workspace = true
