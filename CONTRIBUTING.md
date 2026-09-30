@@ -7,7 +7,7 @@ supported scope.
 ## Start with a reproducible case
 
 For a bug or scientific discrepancy,
-[open an issue](https://github.com/unibiointelligence/pharmflux/issues) with a
+[open an issue](https://github.com/unibio-intelligence/pharmflux/issues) with a
 minimal model and request, the expected and observed behavior, units, dosing event order, solver
 and tolerances, PharmFlux version, and operating system. Use synthetic or
 shareable data. If a proposed feature changes a model format, solver contract,
@@ -52,5 +52,5 @@ and update [its provenance record](vendor/DIFFSOL-PROVENANCE.md). Solver changes
 may also be suitable for contribution to the
 [Diffsol project](https://github.com/martinjrobins/diffsol).
 
-PharmFlux code is dual-licensed under MIT or Apache 2.0. Synthetic model and
-request fixtures use the [fixture license](conformance/FIXTURE-LICENSE.md).
+PharmFlux code and synthetic fixtures are licensed under
+[Apache 2.0](LICENSE). Vendored Diffsol retains its upstream MIT license.

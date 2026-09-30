@@ -107,11 +107,10 @@ scientific test expectations, issue reports, and contribution steps.
 
 ## License and attribution
 
-PharmFlux code is available under the [MIT](LICENSE-MIT) or
-[Apache 2.0](LICENSE-APACHE) license, at your choice. The synthetic model and
-request files have [separate terms](conformance/FIXTURE-LICENSE.md). Vendored
-Diffsol is MIT-licensed; its source, citation, and local changes are described
-in the [provenance record](vendor/DIFFSOL-PROVENANCE.md).
+PharmFlux code and synthetic fixtures are licensed under
+[Apache 2.0](LICENSE). Vendored Diffsol retains its upstream MIT license;
+its source, citation, and local changes are described in the
+[provenance record](vendor/DIFFSOL-PROVENANCE.md).
 
 Developed by [UniBio Intelligence](https://unibiointelligence.com).
 

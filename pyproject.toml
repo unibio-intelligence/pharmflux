@@ -7,7 +7,7 @@ name = "pharmflux"
 version = "0.1.0"
 requires-python = ">=3.10"
 description = "Experimental Rust pharmacology model compiler and simulation engine"
-license = "MIT OR Apache-2.0"
+license = "Apache-2.0"
 
 [tool.maturin]
 manifest-path = "bindings/python/Cargo.toml"
@@ -23,7 +23,7 @@ include = [
   { path = "Cargo.toml", format = "sdist" },
   { path = "Cargo.lock", format = "sdist" },
   { path = ".cargo/config.toml", format = "sdist" },
-  { path = "LICENSE-*", format = "sdist" },
+  { path = "LICENSE", format = "sdist" },
   { path = "README.md", format = "sdist" },
   { path = "crates/*/Cargo.toml", format = "sdist" },
   { path = "crates/*/build.rs", format = "sdist" },

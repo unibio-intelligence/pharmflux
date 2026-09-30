@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "license": "MIT OR Apache-2.0",
+  "license": "Apache-2.0",
   "exports": {
     ".": { "types": "./js/index.d.mts", "import": "./js/index.mjs" },
     "./worker": "./js/engine-worker.mjs"
@@ -12,6 +12,6 @@
     "js/index.mjs", "js/index.d.mts", "js/client.mjs", "js/client.d.mts",
     "js/engine-worker.mjs", "pkg/engine/pharmflux_wasm.js",
     "pkg/engine/pharmflux_wasm_bg.wasm", "pkg/engine/pharmflux_wasm.d.ts",
-    "README.md", "LICENSE-MIT", "LICENSE-APACHE"
+    "README.md", "LICENSE"
   ]
 }
