@@ -13,3 +13,7 @@ __pycache__/
 /bindings/r/src/*.o
 /bindings/r/src/*.so
 /bindings/r/src/*.dll
+
+/docs/_site/
+/docs/pharmflux-python-tutorial-output/
+/docs/pharmflux-r-tutorial-output/

@@ -10,14 +10,18 @@ from this repository.
 
 ## Documentation
 
-- [Installation and first run](docs/installation.md): Rust, Python, and
-  WebAssembly builds.
-- [Models and simulation](docs/modeling.md): model format, units, dosing,
-  solver selection, and result shape.
-- [Fitting](docs/fitting.md): supported fit contracts, example requests, and
-  result interpretation.
-- [Browser integration and privacy](docs/browser.md): Web Worker setup and
-  what local execution does and does not guarantee.
+Read the [PharmFlux documentation site](https://unibio-intelligence.github.io/pharmflux/)
+or the [user-guide index](docs/QUICKSTART.md). The Python Jupyter notebook and R
+Markdown guide include executable synthetic examples for simulation, dosing,
+scans, sensitivities, fitting, population data, and saving results.
+
+- [Python user guide](docs/PYTHON-USER-GUIDE.md) · [Jupyter notebook](docs/PYTHON-USER-GUIDE.ipynb)
+- [R user guide](docs/R-USER-GUIDE.md) · [R Markdown](docs/R-USER-GUIDE.Rmd)
+- [Installation](docs/installation.md)
+- [Modeling language and dosing](docs/modeling.md)
+- [Fitting and scientific limits](docs/fitting.md)
+- [Browser client](docs/browser.md)
+
 
 ## What is included
 
@@ -85,7 +89,7 @@ the Rust and Python sensitivity APIs.
 | `bindings/cli/` | `pharmflux` command-line interface. |
 | `bindings/python/` | Native Python package and tabular population-fit helper. |
 | `bindings/wasm/` | WebAssembly and JavaScript bindings for local browser execution. Generated WASM files are not committed. |
-| `bindings/r/src/rust/` | Low-level R bridge source. A complete installable R package is not part of this release. |
+| `bindings/r/` | Installable R source package, native bridge, and function help. |
 | `conformance/` | Synthetic models, requests, and scientific regression cases. |
 | `vendor/diffsol/` | Pinned solver source used by the Rust runtime. See [provenance](vendor/DIFFSOL-PROVENANCE.md). |
 

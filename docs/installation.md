@@ -72,8 +72,26 @@ registry. See [browser integration and privacy](browser.md) before embedding
 it. The direct WASM bindings contain additional operations; the supplied
 browser worker currently exposes simulation only.
 
-## R bridge status
+## R source package
 
-`bindings/r/src/rust/` contains a low-level bridge for R integration. This
-release does not contain a complete installable R package; use the Rust,
-command-line, Python, or browser interfaces above.
+The source checkout includes the R package and its native Rust workspace.
+See the [R installation instructions and executable guide](R-USER-GUIDE.md#install-and-verify).
+It requires R, jsonlite, a compatible C compiler, and Rust/Cargo.
+No CRAN or R-universe package publication is assumed.
+
+## Build the documentation locally
+
+After installing both bindings and the notebook/R Markdown prerequisites:
+
+```sh
+python -m pip install -r docs/requirements.txt
+python scripts/build_user_guide_formats.py
+python -m nbconvert --to notebook --execute --inplace docs/PYTHON-USER-GUIDE.ipynb
+python -m nbconvert --to html docs/PYTHON-USER-GUIDE.ipynb
+Rscript -e 'rmarkdown::render("docs/R-USER-GUIDE.Rmd")'
+python scripts/build_quickstart_docs.py
+```
+
+Open `docs/_site/index.html` to read and search the built site offline. The
+repository's documentation workflow checks tutorials on pull requests and
+publishes the site from passing main-branch builds.
