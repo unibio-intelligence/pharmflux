@@ -22,11 +22,15 @@ jobs:
         with:
           r-version: release
           use-public-rspm: true
+      - name: Install R rendering system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libuv1-dev pandoc
       - name: Install Python binding and documentation dependencies
         run: python -m pip install . -r docs/requirements.txt
       - name: Install R binding and rendering dependencies
         run: |
-          Rscript -e 'install.packages(c("jsonlite", "knitr", "rmarkdown"), repos="https://cloud.r-project.org")'
+          Rscript -e 'packages <- c("jsonlite", "knitr", "rmarkdown"); install.packages(packages, repos="https://cloud.r-project.org"); stopifnot(all(vapply(packages, requireNamespace, logical(1), quietly=TRUE)))'
           cargo fetch --locked
           R CMD INSTALL bindings/r
       - name: Generate executable guides
