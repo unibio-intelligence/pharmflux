@@ -65,20 +65,14 @@ semantics come from the explicit `observation_side`, never row order.
 
 `dataset.request` is the complete native request. `dataset.mapping` links each
 zero-based source row to its subject and zero-based result row. The fit result
-retains that mapping and subject IDs. For FOCEI, `fitted_observations` adds
-`subject_id` and `source_row` to the engine's PRED/IPRED rows for both FOCEI
-and SAEM. A one-effect SAEM request may estimate a common additive residual
-SD with `additive_error_fit`; its observations must share one output, zero
-proportional error, and the declared starting SD. Two-effect SAEM can also
-estimate this SD. Fixed normal additive/proportional and
-lognormal residual errors are available in the native observation contract;
-left-censored observations use `censoring: "left"` and place the quantification
-limit in `value`. A fitted additive SD can use left-censored normal rows.
-One-effect native SAEM can estimate up to four bounded exponential,
-subject-constant covariate effects. One- and two-effect SAEM can report local
-marginal-objective uncertainty under the
-limits in the [SAEM guide](SAEM.md). The dataset convenience adapter still
-requires explicit native request construction for these fields.
+retains that mapping and subject IDs. When fitted observations are returned,
+`fitted_observations` adds `subject_id` and `source_row` to the engine's
+PRED/IPRED rows. SAEM can estimate a common additive residual SD through
+`additive_error_fit`; its observations must share one output, zero
+proportional error, and the declared starting SD. Fixed Gaussian additive and
+proportional errors are supported. Lognormal observation errors, censoring,
+fitted-covariate request fields, and SAEM uncertainty are outside this public
+contract. See the [SAEM guide](SAEM.md) for the exact scope.
 `burn_in_iterations` can set the SAEM
 exploration length independently of `max_iterations`. Inspect
 `population["status"]` before treating estimates as converged. Native

@@ -648,10 +648,11 @@ were a final marginal objective. `saem_observations` can be `NULL` when the
 native result supplies no fitted-observation rows. Inspect the returned object
 and method-specific status before requesting diagnostics or interpreting fits.
 
-The native SAEM contract includes fixed normal/lognormal errors, left censoring,
-specific fitted additive-error cases, bounded one-effect fitted covariates,
-and limited local uncertainty. Advanced fields require explicit native
-requests; the row adapter does not infer them. See [the SAEM guide](SAEM.md)
+The native SAEM contract includes one- and two-effect lognormal subject effects
+with Gaussian residual error and supported common additive-error estimation.
+This public version does not support lognormal observation errors, censored
+observations, a fitted-covariate request field, or SAEM uncertainty. See
+[the SAEM guide](SAEM.md)
 for exact combinations and limitations. Record seeds, examine stability across
 seeds, and verify recovery on a cohort representative of your intended use.
 

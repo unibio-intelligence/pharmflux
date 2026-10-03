@@ -8,28 +8,20 @@ The request contains a sensitivity run, an observation table and optional
 independent Gaussian priors. Each observation names an output and a zero-based
 row in the run's ordered result grid, plus a measured quantity and error model.
 Duplicate rows represent independent replicate measurements. Omit missing
-measurements. A row with `censoring: "left"` supplies its lower quantification
-limit as `value`; its likelihood is the probability of an observation below
-that limit. Correlated residuals are outside this contract.
+measurements. Correlated residuals, censored observations, and lognormal
+observation errors are outside this public contract.
 
 The error coefficients are known constants for this operation:
 
 - `additive_sd` is a quantity in the observable's units.
 - `proportional_sd` is dimensionless.
 - Both are nonnegative and cannot both be zero.
-- Optional `model: "lognormal"` uses zero additive SD and treats
-  `proportional_sd` as the standard deviation on the log-observation scale.
 
 For prediction μ, variance is `additive_sd² + (proportional_sd · μ)²`.
 The score includes the normal density normalization and the variance derivative,
 not only a weighted residual term. Pure proportional error at zero prediction
 is a domain error. Data and additive standard deviations convert to the model's
 declared output unit before evaluation. Density values use that unit basis.
-For the lognormal model, both prediction and observed value (or censoring
-limit) must be positive. An uncensored observation uses the lognormal density,
-including its `log(value)` Jacobian; a censored observation uses the normal
-CDF of `log(limit) - log(prediction)` divided by the log-scale SD.
-
 Optional priors name selected parameters and provide mean and positive standard
 deviation quantities. Priors are normal densities on natural parameter values
 in the model's declared parameter units. No parameter-coordinate Jacobian is
@@ -43,11 +35,9 @@ Invalid units, nonfinite/zero variance, unknown outputs, out-of-range rows,
 duplicate prior names, overflow and exhausted storage budgets fail without a
 partial objective. Observation storage is reserved before simulation.
 
-Native tests compare additive, proportional, combined, and lognormal errors,
-including left censoring, against independently written one-compartment
-likelihoods and finite differences. These tests qualify scoring and gradients;
-they do not establish optimizer recovery, population inference or general
-observation-model support.
+The executable guides check synthetic parameter recovery with additive
+Gaussian error. A successful synthetic example does not establish recovery
+for every equation class, dataset, or sampling design.
 
 ## Native bounded individual fitting
 
@@ -129,9 +119,3 @@ with the request's selected parameter order, then reuse the immutable instance
 across independent fits or threads. Native parsing, fitting and serialization
 release the GIL; requests retain the one-million-byte bound. `PharmfluxError`
 preserves structured failures. Nonconverged fits return an explicit status.
-
-The WASM `CompiledSensitivities.fit(request_json)` method accepts the same
-versioned envelope. The conformance worker dispatches `kind: "fit"` and caches
-only the compiled source plus selected parameter order. A fit owns independent
-request values. Cancellation terminates the worker; a later request recreates
-it. The worker is currently built with the `m0-conformance` feature.

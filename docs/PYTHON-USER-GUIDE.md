@@ -592,10 +592,11 @@ A converged SAEM result reports `saem_marginal_objective_function_value`.
 A limited run can report `saem_complete_data_surrogate`; these objective
 values are not interchangeable. Fitted observation rows can be absent in an
 incomplete SAEM result; inspect the field instead of assuming a diagnostics
-table exists. The [SAEM guide](SAEM.md) describes one- and two-effect scope,
-estimated additive error, normal/lognormal and left-censored observations,
-bounded fitted covariates, and local uncertainty. Those advanced contracts
-require explicit native request fields; the row adapter does not infer them.
+table exists. The [SAEM guide](SAEM.md) describes one- and two-effect
+lognormal subject effects with Gaussian residual error and the supported
+common additive-error estimation. This public version does not support
+lognormal observation errors, censored observations, a fitted-covariate
+request field, or SAEM uncertainty. The row adapter does not infer them.
 Record the seed, repeat seeds when assessing stability, and verify recovery
 for your own equation class and cohort design.
 
